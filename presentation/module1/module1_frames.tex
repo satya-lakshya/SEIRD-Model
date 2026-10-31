@@ -15,11 +15,6 @@
 \definecolor{mvMuted}{HTML}{5F6B7A}
 \definecolor{mvSoft}{HTML}{F3EDF6}
 \definecolor{mvRule}{HTML}{C9B6D3}
-% Model colours match the published-models figure
-\definecolor{moStatic}{HTML}{1F77B4}
-\definecolor{moAlthaus}{HTML}{D62728}
-\definecolor{moRivers}{HTML}{2CA02C}
-\definecolor{moDynamic}{HTML}{9333EA}
 
 \providecommand{\mvTakeaway}[1]{%
   \par\vspace{3pt}\noindent
@@ -81,37 +76,46 @@
     \item $\sigma,\gamma$ fixed from WHO clinical data, so the data only have to determine $\beta(t)$ and $\mu$
   \end{itemize}
 \end{columns}
-\mvTakeaway{\textbf{Why $\beta(t)$:} with a constant $\beta$ ($R_0 = 2$) the model predicts about \textbf{80\%} of Sierra Leone infected and \textbf{33\%} dead.
-WHO confirmed 8{,}704 cases, about \textbf{0.12\%}. The difference is that transmission fell.}
 \end{frame}
 
 % ----------------------------------------------------------------------
 \begin{frame}{Published models: how others handled $\beta(t)$}
-\framesubtitle{Module 1 \textbullet\ each makes one assumption about how transmission changes \textbullet\ figure: illustrative shapes over 120 days}
+\framesubtitle{Module 1 \textbullet\ each makes one assumption about how transmission changes, and each assumption has a cost}
 \vspace{-2pt}
 \begin{columns}[T,onlytextwidth]
-\column{0.48\textwidth}
-  \centering
-  \includegraphics[width=\linewidth]{figs/m1_published_models.png}
-\column{0.50\textwidth}
-  \scriptsize\setlength{\tabcolsep}{2.5pt}
-  \begin{tabular}{@{}lll@{}}
-    \toprule
-    Model & $\beta(t)$ & Limitation \\
-    \midrule
-    \textbf{Chowell} (2004) & drops after control starts & shape assumed \\
-    \textbf{Legrand} (2007) & 3 routes: $\beta_I, \beta_H, \beta_F$ & routes not separable \\
-    \textbf{\color{moRivers}Rivers} (2014) & step at a policy date & abrupt; date assumed \\
-    \textbf{\color{moAlthaus}Althaus} (2014) & $\beta_0 e^{-k(t-t_0)}$ & can only fall \\
-    \midrule
-    \textbf{\color{mvPINN}Our PINN} & learned from data & smooth, any shape \\
-    \bottomrule
-  \end{tabular}\\[2pt]
-  {\tiny\color{mvMuted} Legrand: from one national case curve the three routes trade off against each other.}\\[4pt]
-  \footnotesize
-  \textbf{\color{moAlthaus}Althaus, in one line:}
-  \[ \frac{dR_t}{dt} = -\frac{\beta s}{\gamma+\mu}\,\big[k + \beta i\big] < 0 \]
-  so once $R_t < 1$ it can never rise again.
+\column{0.485\textwidth}
+  \footnotesize\raggedright
+  \textbf{\color{mvPINN}Chowell et al.\ (2004)} {\scriptsize\color{mvMuted}Congo 1995, Uganda 2000}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item SEIR model; $\beta$ is high until control begins, then falls
+    \item fitted to case counts: $R_0 \approx 1.83$ (Congo), $1.34$ (Uganda)
+    \item[$\times$] the \textbf{shape} of the fall is chosen in advance
+  \end{itemize}
+  \vspace{4pt}
+  \textbf{\color{mvPINN}Legrand et al.\ (2007)} {\scriptsize\color{mvMuted}three routes of infection}
+  \[ \lambda(t) = \beta_I \tfrac{I}{N} + \beta_H \tfrac{H}{N} + \beta_F \tfrac{F}{N} \]
+  \vspace{-10pt}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item community ($I$), hospital ($H$) and funeral ($F$) transmission
+    \item[$\times$] $H$ and $F$ follow $I$, so from one national case curve the three $\beta$'s trade off: \textbf{many sets fit equally well}
+  \end{itemize}
+\column{0.485\textwidth}
+  \footnotesize\raggedright
+  \textbf{\color{mvPINN}Rivers et al.\ (2014)} {\scriptsize\color{mvMuted}a policy step}
+  \[ \beta(t) = \beta_0\,\big[1 - \delta\;\mathbf{1}(t \ge t_{\text{policy}})\big] \]
+  \vspace{-10pt}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item $\beta$ drops by a fraction $\delta$ on a chosen date ($\mathbf{1}$ switches from 0 to 1 there)
+    \item[$\times$] an \textbf{instant jump} at an \textbf{assumed date}; real behaviour changes over weeks
+  \end{itemize}
+  \vspace{4pt}
+  \textbf{\color{mvPINN}Althaus (2014)} {\scriptsize\color{mvMuted}exponential decay}
+  \[ \beta(t) = \beta_0\, e^{-k(t-t_0)}, \qquad \frac{dR_t}{dt} = -\frac{\beta s}{\gamma+\mu}\big[k + \beta i\big] < 0 \]
+  \vspace{-10pt}
+  \begin{itemize}\setlength{\itemsep}{0pt}
+    \item smooth, but $R_t$ can \textbf{only fall}
+    \item[$\times$] once $R_t < 1$ it never rises again: \textbf{no resurgence}, no relaxation of control
+  \end{itemize}
 \end{columns}
 \mvTakeaway{\textbf{The gap:} every published model fixes the \emph{shape} of $\beta(t)$ in advance (a date, a step, a decay).
 Our PINN learns $\beta(t)$ from cases and deaths, with no date or shape assumed.}

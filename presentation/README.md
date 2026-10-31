@@ -4,7 +4,7 @@ Each module has its own folder with its Beamer frames, a standalone file to prev
 
 | Folder | Frames | Figures |
 |---|---|---|
-| `module1/` | Why β(t); published models; phase plane and thresholds (3 frames) | `m1_published_models.png`, `m1_phase_space.png` (copies of the report figures) |
+| `module1/` | Why β(t); published models (text only); phase plane and thresholds (3 frames) | `m1_phase_space.png` (copy of the report figure) |
 | `module5/` | E5 held-out forecast; E7 rolling forecasts; what the PINN adds (3 frames) | `e5_cases.png`, `e5_deaths.png`, `e5_rt.png`, `e7_rolling.png` |
 
 **Preview one module:** compile `moduleN/moduleN_standalone.tex` with pdflatex from inside its folder.
